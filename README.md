@@ -44,7 +44,7 @@ To develop the best binary classification model that predicts the presence or ab
 | `active` | Physical activity (0/1) |
 | `cardio` | Target – presence of cardiovascular disease (0/1) |
 
-### Final modeling features (after engineering)
+### Final modeling features
 
 `age`, `gender`, `ap_hi`, `ap_lo`, `cholesterol`, `gluc`, `smoke`, `alco`, `active`, `bmi`
 
@@ -54,7 +54,7 @@ To develop the best binary classification model that predicts the presence or ab
 - Inspected shape, column names, dtypes, missing values, and sample rows.
 - Confirmed target balance was nearly equal (~50% / 50%).
 
-## 5. Data Preprocessing – Data Cleaning
+## 5. Data Preprocessing - Data Cleaning
 
 - Dropped non-predictive `id` column.
 - Converted `age` from days to years (observed range about 30–65 years).
@@ -159,7 +159,7 @@ Used classification metrics:
   `learning_rate=0.1`, `max_depth=2`, `n_estimators=150`
 - Best CV F1: 0.7289
 
-### Tuned Gradient Boosting – test set
+### Tuned Gradient Boosting - test set
 
 | Metric | Result |
 |---|---|
