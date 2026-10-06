@@ -13,7 +13,7 @@
 
 ## 1. Overview of Problem Statement
 
-Cardiovascular disease (CVD) is one of the leading causes of death worldwide. Early identification of people at higher risk can support timely medical checks and lifestyle changes. Predicting CVD from routine clinical measurements is challenging because several factors—such as age, blood pressure, cholesterol, glucose, body mass index, and lifestyle habits—interact in complex ways. Therefore, developing an effective machine learning classification model can help flag higher-risk profiles and support preventive healthcare decisions. This model is decision-support tool, not as a medical diagnosis system.
+Cardiovascular disease (CVD) is one of the leading causes of death worldwide. Early identification of people at higher risk can support timely medical checks and lifestyle changes. Predicting CVD from routine clinical measurements is challenging because several factors such as age, blood pressure, cholesterol, glucose, body mass index, and lifestyle habits interact in complex ways. Therefore, developing an effective machine learning classification model can help flag higher-risk profiles and support preventive healthcare decisions. This model is decision support tool, not as a medical diagnosis system.
 
 ## 2. Objective
 
