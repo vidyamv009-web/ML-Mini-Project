@@ -1,4 +1,4 @@
-# Title of ML project: Cardiovascular Disease (CVD) Prediction Using Machine Learning
+# Cardiovascular Disease (CVD) Prediction Using Machine Learning
 
 -----------------------------------------------------------------------------------------------------------
 
