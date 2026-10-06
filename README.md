@@ -144,6 +144,7 @@ Used classification metrics:
 ### Best untuned model (Gradient Boosting) – test set
 
 | Metric | Approx. result |
+|---|---|
 | Accuracy | ~0.73 |
 | Precision (CVD) | ~0.74 |
 | Recall (CVD) | ~0.70 |
@@ -161,6 +162,7 @@ Used classification metrics:
 ### Tuned Gradient Boosting – test set
 
 | Metric | Result |
+|---|---|
 | Accuracy | 0.7239 |
 | Precision | 0.7421 |
 | Recall | 0.7011 |
