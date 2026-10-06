@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardiovascular Risk Check</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="bg"></div>
+    <header class="top">
+        <div class="brand">
+            <span class="logo">♥</span>
+            <div>
+                <h1>CardioGuard</h1>
+                <p>Cardiovascular Disease Risk Screening</p>
+            </div>
+        </div>
+        <span class="badge">ML mini project · not a medical diagnosis</span>
+    </header>
+
+    <main class="wrap">
+        <section class="card form-card">
+            <h2>Patient details</h2>
+            <p class="lead">Enter routine check-up values. BMI is calculated automatically from height and weight.</p>
+
+            {% if error %}
+            <div class="alert error">{{ error }}</div>
+            {% endif %}
+
+            <form action="{{ url_for('predict') }}" method="POST">
+                <div class="grid">
+                    <label>Age (years)
+                        <input type="number" name="age" min="20" max="90" required
+                               value="{{ form.age if form else 45 }}" placeholder="e.g. 45">
+                    </label>
+
+                    <label>Gender
+                        <select name="gender" required>
+                            <option value="1" {% if form and form.gender == '1' %}selected{% endif %}>Female</option>
+                            <option value="2" {% if form and form.gender == '2' %}selected{% endif %}>Male</option>
+                        </select>
+                    </label>
+
+                    <label>Height (cm)
+                        <input type="number" name="height" id="height" min="120" max="220" step="0.1" required
+                               value="{{ form.height if form else 170 }}" placeholder="e.g. 170">
+                    </label>
+
+                    <label>Weight (kg)
+                        <input type="number" name="weight" id="weight" min="30" max="200" step="0.1" required
+                               value="{{ form.weight if form else 70 }}" placeholder="e.g. 70">
+                    </label>
+
+                    <label>Systolic BP (top number)
+                        <input type="number" name="ap_hi" min="80" max="250" required
+                               value="{{ form.ap_hi if form else 120 }}" placeholder="e.g. 120">
+                    </label>
+
+                    <label>Diastolic BP (bottom number)
+                        <input type="number" name="ap_lo" min="40" max="180" required
+                               value="{{ form.ap_lo if form else 80 }}" placeholder="e.g. 80">
+                    </label>
+
+                    <label>Cholesterol
+                        <select name="cholesterol" required>
+                            <option value="1" {% if form and form.cholesterol == '1' %}selected{% endif %}>1 — Normal</option>
+                            <option value="2" {% if form and form.cholesterol == '2' %}selected{% endif %}>2 — Above normal</option>
+                            <option value="3" {% if form and form.cholesterol == '3' %}selected{% endif %}>3 — Well above normal</option>
+                        </select>
+                    </label>
+
+                    <label>Blood glucose
+                        <select name="gluc" required>
+                            <option value="1" {% if form and form.gluc == '1' %}selected{% endif %}>1 — Normal</option>
+                            <option value="2" {% if form and form.gluc == '2' %}selected{% endif %}>2 — Above normal</option>
+                            <option value="3" {% if form and form.gluc == '3' %}selected{% endif %}>3 — Well above normal</option>
+                        </select>
+                    </label>
+
+                    <label>Smokes?
+                        <select name="smoke" required>
+                            <option value="0" {% if not form or form.smoke == '0' %}selected{% endif %}>No</option>
+                            <option value="1" {% if form and form.smoke == '1' %}selected{% endif %}>Yes</option>
+                        </select>
+                    </label>
+
+                    <label>Drinks alcohol?
+                        <select name="alco" required>
+                            <option value="0" {% if not form or form.alco == '0' %}selected{% endif %}>No</option>
+                            <option value="1" {% if form and form.alco == '1' %}selected{% endif %}>Yes</option>
+                        </select>
+                    </label>
+
+                    <label>Physically active?
+                        <select name="active" required>
+                            <option value="1" {% if not form or form.active == '1' %}selected{% endif %}>Yes</option>
+                            <option value="0" {% if form and form.active == '0' %}selected{% endif %}>No</option>
+                        </select>
+                    </label>
+
+                    <div class="bmi-live">
+                        Estimated BMI
+                        <strong id="bmiLive">—</strong>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Check risk</button>
+            </form>
+        </section>
+
+        <aside class="side">
+            {% if result %}
+            <section class="card result {{ result.tone }}">
+                <p class="kicker">{{ result.band }}</p>
+                <h2>{{ result.headline }}</h2>
+                <div class="meter">
+                    <div class="meter-fill" style="width: {{ result.probability }}%"></div>
+                </div>
+                <p class="prob">Model probability of CVD: <strong>{{ result.probability }}%</strong></p>
+                <p class="meta">Calculated BMI: {{ result.bmi }}</p>
+            </section>
+            {% else %}
+            <section class="card hint">
+                <h2>How this works</h2>
+                <ol>
+                    <li>Fill in the form with check-up style numbers.</li>
+                    <li>The app adds BMI (and pulse pressure if the saved model needs it).</li>
+                    <li>The trained pipeline scales the numbers and predicts 0 or 1.</li>
+                    <li>You see a probability bar — not a doctor’s diagnosis.</li>
+                </ol>
+            </section>
+            {% endif %}
+
+            <section class="card note">
+                <h3>Try these demo cases</h3>
+                <p><strong>Higher risk:</strong> age 55, male, 170 cm, 85 kg, BP 150/95, cholesterol 3, glucose 2, smokes, not active.</p>
+                <p><strong>Lower risk:</strong> age 35, female, 165 cm, 60 kg, BP 115/75, cholesterol 1, glucose 1, no smoke/alcohol, active.</p>
+            </section>
+        </aside>
+    </main>
+
+    <footer>
+        Educational screening tool trained on the Kaggle cardiovascular dataset. Not medical advice.
+    </footer>
+
+    <script>
+        function updateBmi() {
+            const h = parseFloat(document.getElementById("height").value);
+            const w = parseFloat(document.getElementById("weight").value);
+            const el = document.getElementById("bmiLive");
+            if (h > 0 && w > 0) {
+                const bmi = w / ((h / 100) ** 2);
+                el.textContent = bmi.toFixed(1);
+            } else {
+                el.textContent = "—";
+            }
+        }
+        document.getElementById("height").addEventListener("input", updateBmi);
+        document.getElementById("weight").addEventListener("input", updateBmi);
+        updateBmi();
+    </script>
+</body>
+</html>
